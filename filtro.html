@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>listado personas - JavaScript</title>
+    
+</head>
+<body>
+    <h1>Ejemplo de listado con JavaScript</h1>
+
+    <div id="datos">
+        <!-- Los datos del servidor se mostrarán aquí -->
+    </div>
+
+    <script>
+        // Objeto de ejemplo
+        const datos = [
+            { id: 1, nombre: 'juan perez', años:15 },
+            { id: 2, nombre: 'carla guzman', años:20 },
+            { id: 3, nombre: 'eduardo miranda', años:18 },
+            { id: 4, nombre: 'trinidad vera', años: 13 },
+            { id: 5, nombre: 'adolfo ojeda', años: 30 }
+        ];
+
+        // Función asíncrona para obtener datos del servidor
+        async function obtenerDatos() {
+            // Simular una solicitud fetch con los datos
+            return new Promise(resolve => {
+                setTimeout(() => {
+                resolve(datos);
+                }, 1000); // Simular retardo de 1 segundo
+            });
+        }
+
+        // Función para calcular el total de añoss usando map
+        function calcularTotal(datos) {
+            return datos.map(item => item.años).reduce((total, años) => total + años, 0);
+        }
+
+        // Función para filtrar productos por años usando filter
+        function filtrarProductos(datos, maxaños) {
+            return datos.filter(item => item.años <= maxaños);
+        }
+
+        // Función principal para mostrar datos en la página
+        async function mostrarDatos() {
+            try {
+                // Obtener datos del servidor
+                const datos = await obtenerDatos();
+
+                
+                // Mostrar datos en la página
+                const datosHTML = `
+                    <h2>Nombres</h2>
+                    <ul class="lista">
+                        ${datos.map(item => `<li>${item.nombre} - ${item.años}</li>`).join('')}
+                    </ul>
+                    <p>Total de años: ${calcularTotal(datos)}</p>
+                    <h2> personas con menor o igual a 18 años</h2>
+                    <ul class="lista">
+                        ${filtrarProductos(datos, 18).map(item => `<li>${item.nombre} - ${item.años}</li>`).join('')}
+                    </ul>
+                `;
+                document.getElementById('datos').innerHTML = datosHTML;
+            } catch (error) {
+                console.error('Error al obtener datos:', error);
+            }
+        }
+
+        // Llamar a la función principal para mostrar datos al cargar la página
+        mostrarDatos();
+    </script>
+</body>
+</html>
